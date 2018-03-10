@@ -26,7 +26,7 @@ class Nonogram
 public:
 	Nonogram();
 	//randomly generate a width x height nonogram
-	Nonogram(int width, int height);
+	Nonogram(unsigned int width, unsigned int height);
 
 	//make nonogram based on config file
 	Nonogram(string filename);
@@ -38,14 +38,22 @@ public:
 	//determine if a board is valid based on its hints 
 	bool isSolved();
 
-	TileType get(int x, int y);
-	void set(int x, int y, TileType newVal);
+	TileType get(unsigned int x, unsigned int y);
+	void set(unsigned int x, unsigned int y, TileType newVal);
 
 private:
-	int width, height;
+	unsigned int width, height;
+	//board ordered like this
+	/*
+		(0,0) (1,0) (2,0)
+		(0,1) (1,1) (2,1)
+		(0,2) (1,2) (2,2)
+		(0,3) (1,3) (2,3)
+		where each pair is (x,y)
+	*/
 	vector<vector<TileType>> board;
-	vector<vector<int>> columnHints;
-	vector<vector<int>> rowHints;
+	//col = 0, row = 1
+	vector<vector<vector<unsigned int>>> hints;
 
 };
 
