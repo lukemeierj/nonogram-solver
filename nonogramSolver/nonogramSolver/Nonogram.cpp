@@ -22,6 +22,17 @@ Nonogram::~Nonogram()
 //randomly generate a width x height nonogram
 Nonogram::Nonogram(unsigned int width, unsigned int height) {
 	srand(time(NULL));
+	this->width = width;
+	this->height = height;
+	board.resize(width);
+	for (unsigned int i = 0; i < board.size(); i++) {
+		board[i].resize(height, UNKNOWN);
+	}
+	
+	//create empty hints
+	hints.push_back(vector<vector<unsigned int>>(width));
+	hints.push_back(vector<vector<unsigned int>>(height));
+
 	for (unsigned int col = 0; col < width; col++) {
 		for (unsigned int row = 0; row < height; row++) {
 			if (rand() % 100 > 33) {
@@ -37,7 +48,6 @@ Nonogram::Nonogram(unsigned int width, unsigned int height) {
 		for (unsigned int row = 0; row < height; row++) {
 			unsigned int neighbors = 0;
 			if (get(col, row) == EMPTY) {
-				set(col, row, FILL);
 				for (unsigned int x = col - 1; x < width && x >= 0 && x <= col + 1; x++) {
 					for (unsigned int y = row - 1; y < height && y >= 0 && y <= row + 1; y++) {
 						if (get(x, y) == FILL) {
@@ -52,6 +62,7 @@ Nonogram::Nonogram(unsigned int width, unsigned int height) {
 			}
 		}
 	}
+	//TODO: Generate hints
 
 }
 
@@ -60,6 +71,7 @@ Nonogram::Nonogram(string filename) {
 	ifstream fin(filename);
 	fin >> width >> height;
 	string line;
+	hints.resize(2);
 	unsigned int index = 0;
 	//read each new line as a set of constraints, put them into hint list
 	while (getline(fin, line))
@@ -72,19 +84,19 @@ Nonogram::Nonogram(string filename) {
 		}
 		index++;
 	}
-	if (index > (width + height)) {
+	if ((index-1) > (width + height)) {
 		throw std::length_error("Too many constraints given the width/height");
 	}
 }
 
 TileType Nonogram::get(unsigned int x, unsigned int y) {
-	if (x >= width || y >= height || x == 0 || y == 0) {
+	if (x >= width || y >= height || x < 0 || y < 0) {
 		throw std::out_of_range("Getting board element outside of range.");
 	}
 	return board[x][y];
 }
 void Nonogram::set(unsigned int x, unsigned int y, TileType newVal) {
-	if (x >= width || y >= height || x == 0 || y == 0) {
+	if (x >= width || y >= height || x < 0 || y < 0) {
 		throw std::out_of_range("Setting board element outside of range.");
 	}
 	board[x][y] = newVal;
@@ -93,16 +105,16 @@ void Nonogram::set(unsigned int x, unsigned int y, TileType newVal) {
 //output board config to file
 void Nonogram::saveBoardConfig(string filename) {
 	ofstream fout(filename);
-	cout << width << " " << height << endl;
+	fout << width << " " << height << endl;
 
 	//for each set of hints, output a line with each set of constraints
 	//there should be width + height constraints at the end 
 	for (unsigned int dimension = 0; dimension <= 1; dimension++) {
 		for (unsigned int chunk = 0; chunk < hints[dimension].size(); chunk++) {
 			for (unsigned int hintIndex = 0; hintIndex < hints[dimension][chunk].size(); hintIndex++) {
-				cout << hints[dimension][chunk][hintIndex] << " ";
+				fout << hints[dimension][chunk][hintIndex] << " ";
 			}
-			cout << endl;
+			fout << endl;
 		}
 	}
 
