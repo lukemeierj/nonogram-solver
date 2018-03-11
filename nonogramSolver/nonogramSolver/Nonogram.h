@@ -42,6 +42,9 @@ public:
 	void set(unsigned int x, unsigned int y, TileType newVal);
 
 private:
+	bool meetsConstraints(bool rowWise = true);
+	vector<vector<unsigned int>> generateHints(bool rowWise = true);
+	vector<vector<TileType>> getTranspose();
 	unsigned int width, height;
 	//board ordered like this
 	/*
