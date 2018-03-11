@@ -69,12 +69,14 @@ Nonogram::Nonogram(unsigned int width, unsigned int height) {
 //make nonogram based on config file
 Nonogram::Nonogram(string filename) {
 	ifstream fin(filename);
+	string line;
+
 	fin >> width >> height;
+	getline(fin, line);
 	board.resize(width);
 	for (unsigned int i = 0; i < board.size(); i++) {
 		board[i].resize(height, UNKNOWN);
 	}
-	string line;
 	hints.resize(2);
 	unsigned int index = 0;
 	//read each new line as a set of constraints, put them into hint list
@@ -129,22 +131,26 @@ void Nonogram::saveBoardConfig(string filename) {
 //TODO: Test
 //determine if a board is valid based on its hints 
 bool Nonogram::isSolved() {
-	return meetsConstraints(true) && meetsConstraints(false);
+	return meetsConstraints(false) && meetsConstraints(true);
 }
 
 bool Nonogram::meetsConstraints(bool rowWise) {
+	if (board.size() == 0 || board[0].size() == 0) {
+		throw std::out_of_range("Cannot have a 1D or null board.");
+	}
+	
 	vector<vector<TileType>> testBoard;
-	vector<vector<unsigned int>> testHints = vector<vector<unsigned int>>(rowWise ? hints[0] : hints[1]);
+	vector<vector<unsigned int>> testHints = vector<vector<unsigned int>>(rowWise ? hints[1] : hints[0]);
 
 	int hintIndex = 0;
 	if (rowWise) {
-		testBoard = vector<vector<TileType>>(board);
-	}
-	else {
 		testBoard = this->getTranspose();
 	}
-	TileType prev = UNKNOWN;
+	else {
+		testBoard = vector<vector<TileType>>(board);
+	}
 	for (unsigned int x = 0; x < testBoard.size(); x++) {
+		TileType prev = UNKNOWN;
 		for (unsigned int y = 0; y < testBoard[0].size(); y++) {
 			TileType tile = testBoard[x][y];
 			//if any cell is undefined, 
@@ -157,10 +163,10 @@ bool Nonogram::meetsConstraints(bool rowWise) {
 			//  or if we are in a block that is too long for the constraint
 			//		return false
 			else if (tile == FILL) {
-				if (testHints[y].size() <= (hintIndex+1) || testHints[y][hintIndex] <= 0) {
+				if (testHints[x].size() < (hintIndex+1) || testHints[x][hintIndex] <= 0) {
 					return false;
 				}
-				testHints[y][hintIndex]--;
+				testHints[x][hintIndex]--;
 			}
 			else if (tile == EMPTY) {
 				//if there are no rules, don't return false
@@ -168,7 +174,7 @@ bool Nonogram::meetsConstraints(bool rowWise) {
 				//		if we have run out of rules 
 				//			or if we have not completed a constraint
 				//			return false
-				if (testHints[y].size() > 0 && (testHints[y].size() <= (hintIndex + 1)|| testHints[y][hintIndex] > 0)) {
+				if (testHints[x].size() != 0 && prev == FILL && (testHints[x].size() < (hintIndex + 1) || testHints[x][hintIndex] > 0)) {
 					return false;
 				}
 				else if (prev == FILL) {
@@ -177,6 +183,7 @@ bool Nonogram::meetsConstraints(bool rowWise) {
 			}
 			prev = tile;
 		}
+		if (testHints[x].size() != 0 && testHints[x].size() > (hintIndex + 1) && testHints[x][hintIndex] != 0) return false;
 		hintIndex = 0;
 	}
 	return true;
@@ -186,10 +193,10 @@ vector<vector<unsigned int>> Nonogram::generateHints(bool rowWise) {
 	vector<vector<TileType>> testBoard;
 	vector<vector<unsigned int>> hints = vector<vector<unsigned int>>();
 	if (rowWise) {
-		testBoard = vector<vector<TileType>>(board);
+		testBoard = this->getTranspose();
 	}
 	else {
-		testBoard = this->getTranspose();
+		testBoard = vector<vector<TileType>>(board);
 	}
 	TileType prev = UNKNOWN;
 	for (unsigned int x = 0; x < testBoard.size(); x++) {
@@ -210,6 +217,7 @@ vector<vector<unsigned int>> Nonogram::generateHints(bool rowWise) {
 				}
 			}
 		}
+		if (hint > 0) lineHints.push_back(hint);
 		hints.push_back(lineHints);
 	}
 	return hints;

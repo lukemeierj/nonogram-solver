@@ -37,7 +37,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="2x2.txt">
+    <Text Include="2x2-test.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="5x2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="5x2-test.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
