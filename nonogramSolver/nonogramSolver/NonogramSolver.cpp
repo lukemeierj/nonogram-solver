@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "NonogramSolver.h"
+#include <stack>
+
 
 
 NonogramSolver::NonogramSolver()
@@ -29,11 +31,28 @@ Nonogram NonogramSolver::getSolution() {
 	return Nonogram();
 }
 
+
+
 vector<TileType> NonogramSolver::consolidate(int index, bool rowWise) {
 	vector<TileType> line = nonogram.getLine(index, rowWise);
+	vector<unsigned int> hints = nonogram.getHints(index, rowWise);
+
 
 
 	vector<LineInfo> commonGround = vector<LineInfo>(line.size());
+
+	stack<PartialPermutation> permutationStack = stack<PartialPermutation>();
+	permutationStack.push({ vector<TileType>(line), 0, 0 });
+	while (!permutationStack.empty()) {
+		PartialPermutation permutation = permutationStack.top();
+		permutationStack.top();
+		for (int i = permutation.lineIndex; i < permutation.maxIndex(hints); i++){
+			vector<TileType> newLine = vector<TileType>(permutation.line);
+
+		}
+
+
+	}
 
 	//for each permutation
 	vector<TileType> permutation = vector<TileType>(line.size());
@@ -69,7 +88,9 @@ vector<TileType> NonogramSolver::incorporateCommonGround(vector<TileType> line, 
 			}
 		}
 	}
+	return line;
 }
+
 
 
 
