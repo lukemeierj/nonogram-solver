@@ -254,3 +254,26 @@ vector<TileType> Nonogram::getLine(unsigned int index, bool rowWise) {
 		return board[index];
 	}
 }
+
+vector<unsigned int> Nonogram::getHints(unsigned int index, bool rowWise) {
+	return (rowWise ? hints[1][index] : hints[0][index]);
+}
+ 
+void Nonogram::setLine(vector<TileType> newLine, unsigned int index,  bool rowWise) {
+	if (rowWise) {
+		if (newLine.size() != board.size()) {
+			throw std::out_of_range("Getting board element outside of range.");
+		}
+		for (unsigned int i = 0; i < board.size(); i++) {
+			board[i][index] = newLine[i];
+		}
+	}
+	else {
+		if (board.size() <= 0 || index >= board.size() || newLine.size() != board[0].size()) {
+			throw std::out_of_range("Getting board element outside of range.");
+		}
+		for (unsigned int i = 0; i < board[0].size(); i++) {
+			board[index][i] = newLine[i];
+		}
+	}
+}

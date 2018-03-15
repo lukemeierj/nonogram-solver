@@ -42,6 +42,9 @@ public:
 	void set(unsigned int x, unsigned int y, TileType newVal);
 	//returns a row (rowWise = true) or a column (rowWise = false)
 	vector<TileType> getLine(unsigned int index, bool rowWise);
+	vector<unsigned int> getHints(unsigned int index, bool rowWise);
+	void setLine(vector<TileType> newLine, unsigned int index, bool rowWise);
+
 
 private:
 	bool meetsConstraints(bool rowWise = true);
