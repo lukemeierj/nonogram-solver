@@ -29,7 +29,7 @@ Nonogram NonogramSolver::getSolution() {
 	return Nonogram();
 }
 
-vector<TileType> consolidate(int index, bool rowWise) {
+vector<TileType> NonogramSolver::consolidate(int index, bool rowWise) {
 	return vector<TileType>(5, UNKNOWN);
 }
 
