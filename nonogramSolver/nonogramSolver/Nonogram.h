@@ -12,14 +12,6 @@ enum TileType {
 	EMPTY,
 };
 
-//class NonogramChunk {
-//public:
-//	TileType get(int i);
-//
-//private:
-//	vector<TileType> data;
-//	const vector<int> hints;
-//};
 
 class Nonogram
 {

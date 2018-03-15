@@ -30,7 +30,47 @@ Nonogram NonogramSolver::getSolution() {
 }
 
 vector<TileType> NonogramSolver::consolidate(int index, bool rowWise) {
-	return vector<TileType>(5, UNKNOWN);
+	vector<TileType> line = nonogram.getLine(index, rowWise);
+
+
+	vector<LineInfo> commonGround = vector<LineInfo>(line.size());
+
+	//for each permutation
+	vector<TileType> permutation = vector<TileType>(line.size());
+
+	addToCommonGround(permutation, commonGround);
+
+	return incorporateCommonGround(line, commonGround, 1);
 }
+
+vector<LineInfo> NonogramSolver::addToCommonGround(vector<TileType> line, vector<LineInfo> &commonGround) {
+	for (unsigned int i = 0; i < line.size(); i++) {
+		if (line[i] == FILL) {
+			commonGround[i].timesFilled++;
+		}
+		else if (line[i] == EMPTY) {
+			commonGround[i].timesEmpty++;
+		}
+	}
+	return commonGround;
+}
+
+vector<TileType> NonogramSolver::incorporateCommonGround(vector<TileType> line, vector<LineInfo> &commonGround, unsigned int threshold) {
+	if (commonGround.size() != line.size()) {
+		throw std::out_of_range("Setting board element outside of range.");
+	}
+	for (unsigned int i = 0; i < line.size(); i++) {
+		if (line[i] == UNKNOWN) {
+			if (commonGround[i].timesEmpty == threshold) {
+				line[i] = EMPTY;
+			}
+			else if (commonGround[i].timesFilled == threshold) {
+				line[i] = FILL;
+			}
+		}
+	}
+}
+
+
 
 
