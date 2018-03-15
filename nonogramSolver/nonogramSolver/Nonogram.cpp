@@ -235,3 +235,22 @@ vector<vector<TileType>> Nonogram::getTranspose() {
 	}
 	return transpose;
 }
+
+vector<TileType> Nonogram::getLine(unsigned int index, bool rowWise) {
+	if (rowWise) {
+		if (board.size() <= 0 || index > board[0].size()) {
+			throw std::out_of_range("Getting board element outside of range.");
+		}
+		vector<TileType> result;
+		for (unsigned int i = 0; i < board.size(); i++) {
+			result.push_back(board[i][index]);
+		}
+		return result;
+	}
+	else {
+		if (index > board.size()) {
+			throw std::out_of_range("Getting board element outside of range.");
+		}
+		return board[index];
+	}
+}
