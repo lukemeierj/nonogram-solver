@@ -52,5 +52,11 @@
     <Text Include="5x2-test.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="5x1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="6x1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

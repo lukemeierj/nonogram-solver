@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "NonogramSolver.h"
 #include <stack>
+#include <queue>
 
 
 
@@ -23,6 +24,20 @@ void NonogramSolver::setNonogram(Nonogram nonogram) {
 
 
 Nonogram NonogramSolver::getSolution() {
+	queue<LineQueue> searchQueue = queue<LineQueue>();
+
+	for (unsigned int i = 0; i < nonogram.getHeight(); i++) {
+		searchQueue.push({ i, true });
+	}
+	for (unsigned int i = 0; i < nonogram.getWidth(); i++) {
+		searchQueue.push({ i, false });
+	}
+
+	while (!searchQueue.empty()) {
+		LineQueue element = searchQueue.front();
+		searchQueue.pop();
+		//nonogram.setLine();
+	}
 	//rowWise means we look at the rows, if rowWise is false we look at columns
 	//we want to call consolidate on each row and column, 
 	//then set the nonogram's board values to the values consolidate returns for that row/column
@@ -33,62 +48,100 @@ Nonogram NonogramSolver::getSolution() {
 
 
 
-vector<TileType> NonogramSolver::consolidate(int index, bool rowWise) {
-	vector<TileType> line = nonogram.getLine(index, rowWise);
-	vector<unsigned int> hints = nonogram.getHints(index, rowWise);
+bool NonogramSolver::consolidate(Line &line) {
+	vector<unsigned int> hints = nonogram.getHints(line.getIndex(), line.getRowWise());
 
-
-
-	vector<LineInfo> commonGround = vector<LineInfo>(line.size());
 
 	stack<PartialPermutation> permutationStack = stack<PartialPermutation>();
-	permutationStack.push({ vector<TileType>(line), 0, 0 });
+
+	int numValidPermutations = 0;
+
+	permutationStack.push({ Line(line), 0, 0 });
+
 	while (!permutationStack.empty()) {
 		PartialPermutation permutation = permutationStack.top();
-		permutationStack.top();
-		for (int i = permutation.lineIndex; i < permutation.maxIndex(hints); i++){
-			vector<TileType> newLine = vector<TileType>(permutation.line);
+		permutationStack.pop();
+		//If permutation on stack is valid and complete, add to common ground
+		if (permutation.hintIndex == hints.size() && permutation.lineIndex >= permutation.line.size()) {
+			line.addConstraints();
+			numValidPermutations++;
+			continue;
+		}
 
+		//For each possible start position of the hint
+		for (int start = permutation.lineIndex; hints.size() != 0 && start <= permutation.maxIndex(hints); start++) {
+			newPerm:
+			unsigned int newIndex = 0, hintIndex = permutation.hintIndex;
+			Line newLine = Line(permutation.line);
+			for (int cursor = (int)permutation.lineIndex - start; cursor < (int)hints[hintIndex]; cursor++) {
+				if (newLine[start + cursor] == EMPTY) {
+					goto newPerm;
+				}
+				else if(cursor >= 0) {
+					newLine[start + cursor] = FILL;
+				}
+				else {
+					newLine[start + cursor] = EMPTY;
+				}
+				newIndex = start + cursor;
+			}
+			//The block of FILL cells continues past the hint
+			if ((int)newIndex < (int)newLine.size()-1 && newLine[newIndex + 1] == FILL) {
+				goto newPerm;
+			}
+			else if (++hintIndex == hints.size()) {
+				for (++newIndex; newIndex < newLine.size(); newIndex++) {
+					if (newLine[newIndex] == FILL) {
+						goto newPerm;
+					}
+					else {
+						newLine[newIndex] = EMPTY;
+					}
+				}
+				//Begin next hint after +2 cells.  +1 for the EMPTY cell after a block, and +1 for beginning after that
+			}
+			else {
+				newLine[newIndex + 1] = EMPTY;
+			}
+			permutationStack.push({ newLine, newIndex + 2, hintIndex });
 		}
 
 
 	}
 
-	//for each permutation
-	vector<TileType> permutation = vector<TileType>(line.size());
-
-	addToCommonGround(permutation, commonGround);
-
-	return incorporateCommonGround(line, commonGround, 1);
+	return line.constrain(numValidPermutations);
 }
 
-vector<LineInfo> NonogramSolver::addToCommonGround(vector<TileType> line, vector<LineInfo> &commonGround) {
-	for (unsigned int i = 0; i < line.size(); i++) {
-		if (line[i] == FILL) {
+void Line::addConstraints() {
+	for (unsigned int i = 0; i < data.size(); i++) {
+		if (data[i] == FILL) {
 			commonGround[i].timesFilled++;
 		}
-		else if (line[i] == EMPTY) {
+		else if (data[i] == EMPTY) {
 			commonGround[i].timesEmpty++;
 		}
 	}
-	return commonGround;
 }
 
-vector<TileType> NonogramSolver::incorporateCommonGround(vector<TileType> line, vector<LineInfo> &commonGround, unsigned int threshold) {
-	if (commonGround.size() != line.size()) {
+bool Line::constrain(unsigned int threshold) {
+	if (commonGround.size() != data.size()) {
 		throw std::out_of_range("Setting board element outside of range.");
 	}
-	for (unsigned int i = 0; i < line.size(); i++) {
-		if (line[i] == UNKNOWN) {
+	//TODO: Make this show contradictions!  Can't set as FILL if already set as EMPTY
+	bool revised = false;
+	for (unsigned int i = 0; i < data.size(); i++) {
+		if (data[i] == UNKNOWN) {
 			if (commonGround[i].timesEmpty == threshold) {
-				line[i] = EMPTY;
+				data[i] = EMPTY;
+				revised = true;
 			}
 			else if (commonGround[i].timesFilled == threshold) {
-				line[i] = FILL;
+				data[i] = FILL;
+				revised = true;
 			}
 		}
 	}
-	return line;
+	return revised;
 }
 
 

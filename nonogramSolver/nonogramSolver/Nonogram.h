@@ -30,6 +30,9 @@ public:
 	//determine if a board is valid based on its hints 
 	bool isSolved();
 
+	unsigned int getWidth() { return width; }
+	unsigned int getHeight() { return height; }
+
 	TileType get(unsigned int x, unsigned int y);
 	void set(unsigned int x, unsigned int y, TileType newVal);
 	//returns a row (rowWise = true) or a column (rowWise = false)
