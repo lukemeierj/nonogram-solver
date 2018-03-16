@@ -5,42 +5,45 @@
 
 Line::Line(vector<TileType> lineVector, unsigned int index, bool rowWise) {
 	data = lineVector;
-	commonGround = vector<LineInfo>(lineVector.size());
 	this->index = index;
 	this->rowWise = rowWise;
 }
 Line::Line(const Line &rhs) {
 	data = rhs.data;
-	commonGround = vector<LineInfo>(rhs.commonGround);
+	this->index = rhs.index;
+	this->rowWise = rhs.rowWise;
 }
-unsigned int Line::size() {
+const unsigned int Line::size() {
 	return data.size();
 }
 TileType& Line::operator[] (int x) {
 	return data[x];
 }
-bool Line::getRowWise() {
+const bool Line::getRowWise() {
 	return rowWise;
 }
-unsigned int Line::getIndex() {
+const unsigned int Line::getIndex() {
 	return index;
 }
 
-
-void Line::addConstraints() {
-	for (unsigned int i = 0; i < data.size(); i++) {
-		if (data[i] == FILL) {
+vector<LineInfo> Line::addConstraints(vector<LineInfo> commonGround, Line line) {
+	for (unsigned int i = 0; i < line.size(); i++) {
+		if (line[i] == FILL) {
 			commonGround[i].timesFilled++;
 		}
-		else if (data[i] == EMPTY) {
+		else if (line[i] == EMPTY) {
 			commonGround[i].timesEmpty++;
 		}
 	}
+	return commonGround;
 }
 
-bool Line::constrain(unsigned int threshold) {
+bool Line::constrain(vector<LineInfo> commonGround, unsigned int threshold) {
 	if (commonGround.size() != data.size()) {
 		throw std::out_of_range("Setting board element outside of range.");
+	}
+	else if (threshold <= 0) {
+		return false;
 	}
 	//TODO: Make this show contradictions!  Can't set as FILL if already set as EMPTY
 	bool revised = false;
@@ -60,3 +63,6 @@ bool Line::constrain(unsigned int threshold) {
 }
 
 
+const vector<TileType> Line::getVector() {
+	return data;
+}

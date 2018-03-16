@@ -7,7 +7,6 @@ struct LineInfo {
 	unsigned int timesFilled = 0;
 };
 
-
 struct LineQueue {
 	unsigned int index = 0;
 	bool row = true;
@@ -17,14 +16,14 @@ class Line {
 public:
 	Line(vector<TileType> lineVector, unsigned int index, bool rowWise);
 	Line(const Line &rhs);
-	unsigned int size();
+	const unsigned int size();
 	TileType& operator[] (int x);
-	bool getRowWise();
-	unsigned int getIndex();
-	void addConstraints();
-	bool constrain(unsigned int threshold);
+	const bool getRowWise();
+	const unsigned int getIndex();
+	static vector<LineInfo> addConstraints(vector<LineInfo> commonGround, Line line);
+	bool constrain(vector<LineInfo> commonGround, unsigned int threshold);
+	const vector<TileType> getVector();
 private:
-	vector<LineInfo> commonGround;
 	vector<TileType> data;
 	unsigned int index;
 	bool rowWise;

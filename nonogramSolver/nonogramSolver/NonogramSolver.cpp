@@ -36,7 +36,24 @@ Nonogram NonogramSolver::getSolution() {
 	while (!searchQueue.empty()) {
 		LineQueue element = searchQueue.front();
 		searchQueue.pop();
-		//nonogram.setLine();
+		Line line = Line(nonogram.getLine(element.index, element.row), element.index, element.row);
+		if (consolidate(line)) {
+			nonogram.setLine(line.getVector(), line.getIndex(), line.getRowWise());
+			//TODO: only add back rows actually modifed 
+			for (unsigned int i = 0; i < nonogram.getHeight(); i++) {
+				searchQueue.push({ i, true });
+			}
+			for (unsigned int i = 0; i < nonogram.getWidth(); i++) {
+				searchQueue.push({ i, false });
+			}
+		}
+	}
+
+	if (nonogram.isSolved()) {
+		return nonogram;
+	}
+	else {
+		//Backtrack search
 	}
 	//rowWise means we look at the rows, if rowWise is false we look at columns
 	//we want to call consolidate on each row and column, 
@@ -51,6 +68,7 @@ Nonogram NonogramSolver::getSolution() {
 bool NonogramSolver::consolidate(Line &line) {
 	vector<unsigned int> hints = nonogram.getHints(line.getIndex(), line.getRowWise());
 
+	vector<LineInfo> commonGround = vector<LineInfo>(line.size());
 
 	stack<PartialPermutation> permutationStack = stack<PartialPermutation>();
 
@@ -63,14 +81,15 @@ bool NonogramSolver::consolidate(Line &line) {
 		permutationStack.pop();
 		//If permutation on stack is valid and complete, add to common ground
 		if (permutation.hintIndex == hints.size() && permutation.lineIndex >= permutation.line.size()) {
-			line.addConstraints();
+			commonGround = Line::addConstraints(commonGround, permutation.line);
 			numValidPermutations++;
 			continue;
-		}
-
+		} 
+		int start = permutation.lineIndex-1;
+		newPerm:
+		start++;
 		//For each possible start position of the hint
-		for (int start = permutation.lineIndex; hints.size() != 0 && start <= permutation.maxIndex(hints); start++) {
-			newPerm:
+		for (; hints.size() != 0 && start <= permutation.maxIndex(hints); start++) {
 			unsigned int newIndex = 0, hintIndex = permutation.hintIndex;
 			Line newLine = Line(permutation.line);
 			for (int cursor = (int)permutation.lineIndex - start; cursor < (int)hints[hintIndex]; cursor++) {
@@ -78,9 +97,11 @@ bool NonogramSolver::consolidate(Line &line) {
 					goto newPerm;
 				}
 				else if(cursor >= 0) {
+					if (newLine[start + cursor] == EMPTY) goto newPerm;
 					newLine[start + cursor] = FILL;
 				}
 				else {
+					if (newLine[start + cursor] == FILL) goto newPerm;
 					newLine[start + cursor] = EMPTY;
 				}
 				newIndex = start + cursor;
@@ -109,7 +130,7 @@ bool NonogramSolver::consolidate(Line &line) {
 
 	}
 
-	return line.constrain(numValidPermutations);
+	return line.constrain(commonGround, numValidPermutations);
 }
 
 

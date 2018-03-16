@@ -87,7 +87,7 @@ Nonogram::Nonogram(string filename) {
 		int val;
 		while (iss >> val) {
 			//if we have more than width constriants, put it into the row constraint list (index/width = 1)
-			hints[index / width][index%width].push_back(val);
+			if(val > 0) hints[index / width][index%width].push_back(val);
 		}
 		index++;
 	}
