@@ -24,7 +24,7 @@ void NonogramSolver::setNonogram(Nonogram nonogram) {
 
 
 Nonogram NonogramSolver::getSolution() {
-	queue<LineQueue> searchQueue = queue<LineQueue>();
+	queue<LineDescriptor> searchQueue = queue<LineDescriptor>();
 
 	for (unsigned int i = 0; i < nonogram.getHeight(); i++) {
 		searchQueue.push({ i, true });
@@ -34,17 +34,15 @@ Nonogram NonogramSolver::getSolution() {
 	}
 
 	while (!searchQueue.empty()) {
-		LineQueue element = searchQueue.front();
+		LineDescriptor element = searchQueue.front();
 		searchQueue.pop();
 		Line line = Line(nonogram.getLine(element.index, element.row), element.index, element.row);
-		if (consolidate(line)) {
+		vector<LineDescriptor> revisions = consolidate(line);
+		if(revisions.size() > 0) {
 			nonogram.setLine(line.getVector(), line.getIndex(), line.getRowWise());
 			//TODO: only add back rows actually modifed 
-			for (unsigned int i = 0; i < nonogram.getHeight(); i++) {
-				searchQueue.push({ i, true });
-			}
-			for (unsigned int i = 0; i < nonogram.getWidth(); i++) {
-				searchQueue.push({ i, false });
+			for (unsigned int i = 0; i < revisions.size(); i++) {
+				searchQueue.push(revisions[i]);
 			}
 		}
 	}
@@ -54,18 +52,14 @@ Nonogram NonogramSolver::getSolution() {
 	}
 	else {
 		//Backtrack search
+		return Nonogram();
 	}
-	//rowWise means we look at the rows, if rowWise is false we look at columns
-	//we want to call consolidate on each row and column, 
-	//then set the nonogram's board values to the values consolidate returns for that row/column
-	//so, for example, the first column = consolidate(0, false)
-	//first row = consolidate(0, false);
-	return Nonogram();
+
 }
 
 
 
-bool NonogramSolver::consolidate(Line &line) {
+vector<LineDescriptor> NonogramSolver::consolidate(Line &line) {
 	vector<unsigned int> hints = nonogram.getHints(line.getIndex(), line.getRowWise());
 
 	vector<LineInfo> commonGround = vector<LineInfo>(line.size());

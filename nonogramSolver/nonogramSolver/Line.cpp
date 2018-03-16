@@ -2,7 +2,6 @@
 #include "NonogramSolver.h"
 
 
-
 Line::Line(vector<TileType> lineVector, unsigned int index, bool rowWise) {
 	data = lineVector;
 	this->index = index;
@@ -38,13 +37,18 @@ vector<LineInfo> Line::addConstraints(vector<LineInfo> commonGround, Line line) 
 	return commonGround;
 }
 
-bool Line::constrain(vector<LineInfo> commonGround, unsigned int threshold) {
+vector<LineDescriptor> Line::constrain(vector<LineInfo> commonGround, unsigned int threshold) {
+
+	vector<LineDescriptor> revisions = vector<LineDescriptor>();
+	
 	if (commonGround.size() != data.size()) {
 		throw std::out_of_range("Setting board element outside of range.");
 	}
 	else if (threshold <= 0) {
-		return false;
+		return revisions;
 	}
+
+	 
 	//TODO: Make this show contradictions!  Can't set as FILL if already set as EMPTY
 	bool revised = false;
 	for (unsigned int i = 0; i < data.size(); i++) {
@@ -58,8 +62,12 @@ bool Line::constrain(vector<LineInfo> commonGround, unsigned int threshold) {
 				revised = true;
 			}
 		}
+		if (revised) {
+			revisions.push_back({ i, !rowWise });
+		}
 	}
-	return revised;
+	if (revisions.size() > 0) revisions.push_back({ index, rowWise });
+	return revisions;
 }
 
 

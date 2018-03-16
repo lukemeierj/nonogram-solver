@@ -7,7 +7,7 @@ struct LineInfo {
 	unsigned int timesFilled = 0;
 };
 
-struct LineQueue {
+struct LineDescriptor {
 	unsigned int index = 0;
 	bool row = true;
 };
@@ -21,7 +21,7 @@ public:
 	const bool getRowWise();
 	const unsigned int getIndex();
 	static vector<LineInfo> addConstraints(vector<LineInfo> commonGround, Line line);
-	bool constrain(vector<LineInfo> commonGround, unsigned int threshold);
+	vector<LineDescriptor> constrain(vector<LineInfo> commonGround, unsigned int threshold);
 	const vector<TileType> getVector();
 private:
 	vector<TileType> data;
@@ -57,7 +57,7 @@ public:
 	void setNonogram(Nonogram nonogram);
 private:
 	Nonogram nonogram;
-	bool consolidate(Line &line);
+	vector<LineDescriptor> consolidate(Line &line);
 	
 };
 
