@@ -112,37 +112,6 @@ bool NonogramSolver::consolidate(Line &line) {
 	return line.constrain(numValidPermutations);
 }
 
-void Line::addConstraints() {
-	for (unsigned int i = 0; i < data.size(); i++) {
-		if (data[i] == FILL) {
-			commonGround[i].timesFilled++;
-		}
-		else if (data[i] == EMPTY) {
-			commonGround[i].timesEmpty++;
-		}
-	}
-}
-
-bool Line::constrain(unsigned int threshold) {
-	if (commonGround.size() != data.size()) {
-		throw std::out_of_range("Setting board element outside of range.");
-	}
-	//TODO: Make this show contradictions!  Can't set as FILL if already set as EMPTY
-	bool revised = false;
-	for (unsigned int i = 0; i < data.size(); i++) {
-		if (data[i] == UNKNOWN) {
-			if (commonGround[i].timesEmpty == threshold) {
-				data[i] = EMPTY;
-				revised = true;
-			}
-			else if (commonGround[i].timesFilled == threshold) {
-				data[i] = FILL;
-				revised = true;
-			}
-		}
-	}
-	return revised;
-}
 
 
 

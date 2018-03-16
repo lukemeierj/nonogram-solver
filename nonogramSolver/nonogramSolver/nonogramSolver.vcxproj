@@ -149,6 +149,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="Nonogram.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NonogramSolver.cpp" />

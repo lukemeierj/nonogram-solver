@@ -15,28 +15,12 @@ struct LineQueue {
 
 class Line {
 public:
-	Line(vector<TileType> lineVector, unsigned int index, bool rowWise) {
-		data = lineVector;
-		commonGround = vector<LineInfo>(lineVector.size());
-		this->index = index;
-		this->rowWise = rowWise;
-	}
-	Line(const Line &rhs) {
-		data = rhs.data;
-		commonGround = vector<LineInfo>(rhs.commonGround);
-	}
-	unsigned int size() {
-		return data.size();
-	}
-	TileType& operator[] (int x) {
-		return data[x];
-	}
-	bool getRowWise() {
-		return rowWise;
-	}
-	unsigned int getIndex() {
-		return index;
-	}
+	Line(vector<TileType> lineVector, unsigned int index, bool rowWise);
+	Line(const Line &rhs);
+	unsigned int size();
+	TileType& operator[] (int x);
+	bool getRowWise();
+	unsigned int getIndex();
 	void addConstraints();
 	bool constrain(unsigned int threshold);
 private:
