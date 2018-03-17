@@ -39,6 +39,8 @@ public:
 	vector<TileType> getLine(unsigned int index, bool rowWise);
 	vector<unsigned int> getHints(unsigned int index, bool rowWise);
 	void setLine(vector<TileType> newLine, unsigned int index, bool rowWise);
+	bool operator==(Nonogram& rhs)const;
+	bool operator!=(Nonogram& rhs)const;
 
 
 private:

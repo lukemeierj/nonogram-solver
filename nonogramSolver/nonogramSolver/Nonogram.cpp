@@ -277,3 +277,23 @@ void Nonogram::setLine(vector<TileType> newLine, unsigned int index,  bool rowWi
 		}
 	}
 }
+
+
+bool Nonogram::operator==(Nonogram& rhs)const {
+	if (width != rhs.getWidth() || height != rhs.getHeight()) {
+		return false;
+	}
+	for (unsigned int x = 0; x < width; x++) {
+		for (unsigned int y = 0; y < height; y++) {
+			if (board[x][y] != rhs.get(x, y)) {
+				return false;
+			}
+		}
+	}
+	return true;
+
+}
+
+bool Nonogram::operator!=(Nonogram& rhs)const {
+	return !(*this == rhs);
+}
