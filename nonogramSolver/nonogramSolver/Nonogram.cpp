@@ -20,7 +20,7 @@ Nonogram::~Nonogram()
 }
 
 //randomly generate a width x height nonogram
-Nonogram::Nonogram(unsigned int width, unsigned int height) {
+Nonogram::Nonogram(unsigned int width, unsigned int height, bool bunch) {
 	srand(time(NULL));
 	this->width = width;
 	this->height = height;
@@ -40,25 +40,28 @@ Nonogram::Nonogram(unsigned int width, unsigned int height) {
 			}
 		}
 	}
-	//Run through the board again, give empty cells a chance to be filled if their neighbors are filled.
-	for (unsigned int col = 0; col < width; col++) {
-		for (unsigned int row = 0; row < height; row++) {
-			unsigned int neighbors = 0;
-			if (get(col, row) == EMPTY) {
-				for (unsigned int x = col - 1; x < width && x >= 0 && x <= col + 1; x++) {
-					for (unsigned int y = row - 1; y < height && y >= 0 && y <= row + 1; y++) {
-						if (get(x, y) == FILL) {
-							neighbors++;
+	if (bunch) {
+		//Run through the board again, give empty cells a chance to be filled if their neighbors are filled.
+		for (unsigned int col = 0; col < width; col++) {
+			for (unsigned int row = 0; row < height; row++) {
+				unsigned int neighbors = 0;
+				if (get(col, row) == EMPTY) {
+					for (unsigned int x = col - 1; x < width && x >= 0 && x <= col + 1; x++) {
+						for (unsigned int y = row - 1; y < height && y >= 0 && y <= row + 1; y++) {
+							if (get(x, y) == FILL) {
+								neighbors++;
+							}
 						}
 					}
-				}
-				//Higher chance of being filled with more neighbors being filled 
-				if (rand() % 100 < neighbors * 10) {
-					set(col, row, FILL);
+					//Higher chance of being filled with more neighbors being filled 
+					if (rand() % 100 < neighbors * 10) {
+						set(col, row, FILL);
+					}
 				}
 			}
 		}
 	}
+	
 	//column constraints 
 	hints.push_back(generateHints(false));
 	//row constraints
@@ -301,4 +304,14 @@ bool Nonogram::operator==(Nonogram& rhs)const {
 
 bool Nonogram::operator!=(Nonogram& rhs)const {
 	return !(*this == rhs);
+}
+
+Nonogram Nonogram::emptied() {
+	Nonogram newNonogram = Nonogram(*this);
+	for (unsigned int x = 0; x < width; x++) {
+		for (unsigned int y = 0; y < height; y++) {
+			newNonogram.set(x, y, UNKNOWN);
+		}
+	}
+	return newNonogram;
 }

@@ -18,7 +18,7 @@ class Nonogram
 public:
 	Nonogram();
 	//randomly generate a width x height nonogram
-	Nonogram(unsigned int width, unsigned int height);
+	Nonogram(unsigned int width, unsigned int height, bool bunch = true);
 
 	//make nonogram based on config file
 	Nonogram(string filename);
@@ -41,7 +41,7 @@ public:
 	void setLine(vector<TileType> newLine, unsigned int index, bool rowWise);
 	bool operator==(Nonogram& rhs)const;
 	bool operator!=(Nonogram& rhs)const;
-
+	Nonogram emptied();
 
 private:
 	bool meetsConstraints(bool rowWise = true);
