@@ -80,14 +80,19 @@ Nonogram::Nonogram(string filename) {
 	hints.resize(2);
 	unsigned int index = 0;
 	//read each new line as a set of constraints, put them into hint list
+	int hintIndex = 0;
 	while (getline(fin, line))
 	{
-		hints[index / width].push_back(vector<unsigned int>());
+		if (hintIndex == 0 && index == width) {
+			hintIndex = 1;
+			index = 0;
+		}
+		hints[hintIndex].push_back(vector<unsigned int>());
 		std::istringstream iss(line);
 		int val;
 		while (iss >> val) {
 			//if we have more than width constriants, put it into the row constraint list (index/width = 1)
-			if(val > 0) hints[index / width][index%width].push_back(val);
+			if(val > 0) hints[hintIndex][index].push_back(val);
 		}
 		index++;
 	}
