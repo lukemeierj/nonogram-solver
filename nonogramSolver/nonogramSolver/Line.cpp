@@ -50,8 +50,9 @@ vector<LineDescriptor> Line::constrain(vector<LineInfo> commonGround, unsigned i
 
 	 
 	//TODO: Make this show contradictions!  Can't set as FILL if already set as EMPTY
-	bool revised = false;
+
 	for (unsigned int i = 0; i < data.size(); i++) {
+		bool revised = false;
 		if (data[i] == UNKNOWN) {
 			if (commonGround[i].timesEmpty == threshold) {
 				data[i] = EMPTY;

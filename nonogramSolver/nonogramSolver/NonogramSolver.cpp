@@ -40,7 +40,6 @@ Nonogram NonogramSolver::getSolution() {
 		vector<LineDescriptor> revisions = consolidate(line);
 		if(revisions.size() > 0) {
 			nonogram.setLine(line.getVector(), line.getIndex(), line.getRowWise());
-			//TODO: only add back rows actually modifed 
 			for (unsigned int i = 0; i < revisions.size(); i++) {
 				searchQueue.push(revisions[i]);
 			}
@@ -87,16 +86,16 @@ vector<LineDescriptor> NonogramSolver::consolidate(Line &line) {
 			unsigned int newIndex = 0, hintIndex = permutation.hintIndex;
 			Line newLine = Line(permutation.line);
 			for (int cursor = (int)permutation.lineIndex - start; cursor < (int)hints[hintIndex]; cursor++) {
-				if (newLine[start + cursor] == EMPTY) {
-					goto newPerm;
-				}
-				else if(cursor >= 0) {
-					if (newLine[start + cursor] == EMPTY) goto newPerm;
-					newLine[start + cursor] = FILL;
-				}
-				else {
+				if (cursor < 0) {
 					if (newLine[start + cursor] == FILL) goto newPerm;
 					newLine[start + cursor] = EMPTY;
+				} 
+				else if (newLine[start + cursor] == EMPTY) {
+					goto newPerm;
+				}
+				else {
+					if (newLine[start + cursor] == EMPTY) goto newPerm;
+					newLine[start + cursor] = FILL;
 				}
 				newIndex = start + cursor;
 			}
