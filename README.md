@@ -8,6 +8,14 @@ This program includes the interface and design of a Nonogram class and a Nonogra
 ## Nonogram Game Interface
 
 * Create a random nonogram with `Nonogram(width, height)` or `Nonogram(width, height, false)` if you do not want the random generation to favor clustering.
+* Save a nonogram configuration to a file with `myNonogram.saveBoardConfig("filename.txt")`
+* Get and set values of the nonogram board with `myNonogram.set(x,y)` and `myNonogram.get(x,y)`
+* Print a nonogram to the console with either `myNon.print()` or `myNon.printWithHints()`
+* Check if two boards have equal contents with `==`, or not equal with `!=`
+* Get a row with `myNon.getLine(index, true)` or a column with `myNon.getLine(index, false)`
+* Set a row with `myNon.setLine(index, true)` or a column with `myNon.setLine(index, false)`
+* Check if your nonogram is solved with `myNon.isSolved()`
+* Generate an copy of a nonogram with all the board unsolved with `myNon.emptied()`
 * Create a nonogram from a file config with `Nonogram("filename.txt")`
 	* To create a config file, follow this format:
 	
@@ -26,7 +34,7 @@ This program includes the interface and design of a Nonogram class and a Nonogra
 	.
 	[height column constraint #1] [height column constraint #2] 
 	```
-* For example
+	* For example
 	```
 	ex. 
 
@@ -39,19 +47,11 @@ This program includes the interface and design of a Nonogram class and a Nonogra
 	1 2 
 	5 
 	```
-* Nonogram::Nonogram(string filename) {
-* Save a nonogram configuration to a file with `myNonogram.saveBoardConfig("filename.txt")`
-* Get and set values of the nonogram board with `myNonogram.set(x,y)` and `myNonogram.get(x,y)`
-* Print a nonogram to the console with either `myNon.print()` or `myNon.printWithHints()`
-* Check if two boards have equal contents with `==`, or not equal with `!=`
-* Get a row with `myNon.getLine(index, true)` or a column with `myNon.getLine(index, false)`
-* Set a row with `myNon.setLine(index, true)` or a column with `myNon.setLine(index, false)`
-* Check if your nonogram is solved with `myNon.isSolved()`
-* Generate an copy of a nonogram with all the board unsolved with `myNon.emptied()`
 
 ## Nonogram Solver
 
 * Create a new solver agent with `NonogramSolver(myNon)`
-* Attempt to solve the nonogram with `myNon.getSolution()`
+* Attempt to solve the nonogram with `myNon.nearestSolution()`
 	* This does not necessarily return a solved board in the event it cannot be solved through just constraint satisfaction. 
+	* To make sure a board is actually solved, `myNon.nearestSolution().isSolved()`
 

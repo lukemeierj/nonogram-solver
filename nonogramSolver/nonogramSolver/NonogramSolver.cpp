@@ -18,7 +18,7 @@ NonogramSolver::~NonogramSolver()
 {
 }
 
-Nonogram NonogramSolver::getSolution(bool debug) {
+Nonogram NonogramSolver::nearestSolution(bool debug) {
 	queue<LineDescriptor> searchQueue = queue<LineDescriptor>();
 
 	//add all rows and columns to the queue
@@ -48,14 +48,7 @@ Nonogram NonogramSolver::getSolution(bool debug) {
 		}
 	}
 
-	//if solved, return.
-	if (nonogram.isSolved()) {
-		return nonogram;
-	}
-	else {
-		//Backtrack search
-		return nonogram;
-	}
+	return nonogram;
 
 }
 

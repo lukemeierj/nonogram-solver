@@ -32,20 +32,11 @@ void test(int trials, int width, int height) {
 		Nonogram emptyRandom = random.emptied();
 		NonogramSolver randomSolver(emptyRandom);
 		watch.start();
-		Nonogram solution = randomSolver.getSolution();
+		Nonogram solution = randomSolver.nearestSolution();
 		total += watch.get();
 
-		if (solution == empty) {
+		if (solution != random) {
 			failed++;
-			//cout << "Solve failed to solve." << endl;
-			random.saveBoardConfig(to_string(width) + "x" + to_string(height) + "F" + to_string(i) + ".txt");
-		}
-		else if (solution != random) {
-			//emptyRandom.printWithHints();
-			// solution.printWithHints();
-			failed++;
-			//cout << "Incorrect solve or multiple solutions!" << endl;
-			random.saveBoardConfig(to_string(width) + "x" + to_string(height) + "I" + to_string(i) + ".txt");
 		}
 		prev = random;
 
@@ -57,9 +48,11 @@ void test(int trials, int width, int height) {
 
 int main()
 {
-
+	//test that reading from a file works
+	//test that isSolved works
+	//test that saving a config works 
 	Nonogram non("5x2.txt");
-	non.saveBoardConfig("5x2-test.txt");
+	non.saveBoardConfig("5x2-out.txt");
 	non.set(0, 0, FILL);
 	non.set(1, 0, EMPTY);
 	non.set(2, 0, FILL);
@@ -70,16 +63,25 @@ int main()
 	non.set(2, 1, FILL);
 	non.set(3, 1, EMPTY);
 	non.set(4, 1, EMPTY);
+
 	assert(non.isSolved());
+	
 
-	vector<TileType> secondRow = non.getLine(1, true);
-	vector<TileType> secondColumn = non.getLine(1, false);
-	assert(secondRow.size() == 5);
-	assert(secondColumn.size() == 2);
+	Nonogram non2("5x2-out.txt");
+	non2.set(0, 0, FILL);
+	non2.set(1, 0, EMPTY);
+	non2.set(2, 0, FILL);
+	non2.set(3, 0, EMPTY);
+	non2.set(4, 0, FILL);
+	non2.set(0, 1, FILL);
+	non2.set(1, 1, FILL);
+	non2.set(2, 1, FILL);
+	non2.set(3, 1, EMPTY);
+	non2.set(4, 1, EMPTY);
 
-	non.setLine(secondRow, 1, true);
-	non.setLine(secondColumn, 1, false);
+	assert(non2.isSolved());
 
+	//test that when a nonogram is not solved it doesn't give false positives
 
 	non.set(0, 0, FILL);
 	non.set(1, 0, EMPTY);
@@ -92,6 +94,7 @@ int main()
 	non.set(3, 1, EMPTY);
 	non.set(4, 1, FILL);
 	assert(!non.isSolved());
+
 	non.set(0, 0, FILL);
 	non.set(1, 0, UNKNOWN);
 	non.set(2, 0, FILL);
@@ -104,37 +107,44 @@ int main()
 	non.set(4, 1, EMPTY);
 	assert(!non.isSolved());
 
+
+	//test that getLine gets the right thing
+	vector<TileType> secondRow = non.getLine(1, true);
+	vector<TileType> secondColumn = non.getLine(1, false);
+	assert(secondRow.size() == 5);
+	assert(secondColumn.size() == 2);
+
+	non.setLine(secondRow, 1, true);
+	non.setLine(secondColumn, 1, false);
+
+
 	Nonogram little("6x1.txt");
 	NonogramSolver solveLittle(little);
-	assert(solveLittle.getSolution().isSolved());
+	assert(solveLittle.nearestSolution().isSolved());
 
 	NonogramSolver solveHarder(non);
-	assert(solveHarder.getSolution().isSolved());
+	assert(solveHarder.nearestSolution().isSolved());
 
 	Nonogram det5x5("5x5-det.txt");
 	NonogramSolver det5x5Solver(det5x5);
-	assert(det5x5Solver.getSolution().isSolved());
+	assert(det5x5Solver.nearestSolution().isSolved());
 
 	Nonogram det5x5_2("5x5-det2.txt");
 	NonogramSolver det5x5_2Solver(det5x5_2);
-	assert(det5x5_2Solver.getSolution(true).isSolved());
+	assert(det5x5_2Solver.nearestSolution(true).isSolved());
 
 
 	Nonogram d10x10("10x10_1.txt");
 	NonogramSolver d10x10Solver(d10x10);
-	assert(d10x10Solver.getSolution().isSolved());
-
-	//Nonogram d290("290.txt");
-	//NonogramSolver d290solver(d290);
-	//Nonogram solution = d290solver.getSolution();
+	assert(d10x10Solver.nearestSolution().isSolved());
 
 	test(1000, 20, 25);
 
 
-	/*for (int i = 5; i < 50; i++)
+	for (int i = 5; i < 50; i++)
 	{
 		test(100, i, i);
-	}*/
+	}
 
 
 	system("pause");

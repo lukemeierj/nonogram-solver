@@ -75,7 +75,7 @@ public:
 	NonogramSolver(Nonogram nonogram);
 	~NonogramSolver();
 	//get a solution for a nonogram.  if debug = true, print each step as we solve
-	Nonogram getSolution(bool debug = false);
+	Nonogram nearestSolution(bool debug = false);
 	//set the nonogram to something new.
 private:
 	Nonogram nonogram;
