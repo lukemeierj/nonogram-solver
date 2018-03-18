@@ -60,15 +60,28 @@ Nonogram NonogramSolver::getSolution(bool debug) {
 
 
 vector<LineDescriptor> NonogramSolver::consolidate(Line &line, bool debug) {
+
+	//if a line is fully solved, don't bother with permutations.  
+	bool lineAlreadySolved = true;
+	for (unsigned int i = 0; i < line.size(); i++) {
+		if (line[i] == UNKNOWN) {
+			lineAlreadySolved = false;
+			break;
+		}
+	}
+	if (lineAlreadySolved) return vector<LineDescriptor>();
+
+
 	vector<unsigned int> hints = nonogram.getHints(line.getIndex(), line.getRowWise());
 
-	vector<LineInfo> commonGround = vector<LineInfo>(line.size());
+	vector<CellInfo> commonGround = vector<CellInfo>(line.size());
 
 	stack<PartialPermutation> permutationStack = stack<PartialPermutation>();
 
 	int numValidPermutations = 0;
 
 	permutationStack.push({ Line(line), 0, 0 });
+
 
 	while (!permutationStack.empty()) {
 		PartialPermutation permutation = permutationStack.top();

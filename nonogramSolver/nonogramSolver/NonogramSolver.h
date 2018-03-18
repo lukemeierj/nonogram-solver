@@ -2,7 +2,9 @@
 
 #pragma once
 
-struct LineInfo {
+
+//Information on
+struct CellInfo {
 	unsigned int timesEmpty = 0;
 	unsigned int timesFilled = 0;
 };
@@ -20,8 +22,8 @@ public:
 	TileType& operator[] (int x);
 	const bool getRowWise();
 	const unsigned int getIndex();
-	static vector<LineInfo> addConstraints(vector<LineInfo> commonGround, Line line);
-	vector<LineDescriptor> constrain(vector<LineInfo> commonGround, unsigned int threshold);
+	static vector<CellInfo> addConstraints(vector<CellInfo> commonGround, Line line);
+	vector<LineDescriptor> constrain(vector<CellInfo> commonGround, unsigned int threshold);
 	const vector<TileType> getVector();
 private:
 	vector<TileType> data;

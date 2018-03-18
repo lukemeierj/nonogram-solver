@@ -25,7 +25,7 @@ const unsigned int Line::getIndex() {
 	return index;
 }
 
-vector<LineInfo> Line::addConstraints(vector<LineInfo> commonGround, Line line) {
+vector<CellInfo> Line::addConstraints(vector<CellInfo> commonGround, Line line) {
 	for (unsigned int i = 0; i < line.size(); i++) {
 		if (line[i] == FILL) {
 			commonGround[i].timesFilled++;
@@ -37,7 +37,7 @@ vector<LineInfo> Line::addConstraints(vector<LineInfo> commonGround, Line line) 
 	return commonGround;
 }
 
-vector<LineDescriptor> Line::constrain(vector<LineInfo> commonGround, unsigned int threshold) {
+vector<LineDescriptor> Line::constrain(vector<CellInfo> commonGround, unsigned int threshold) {
 
 	vector<LineDescriptor> revisions = vector<LineDescriptor>();
 	
