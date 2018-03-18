@@ -25,6 +25,7 @@ const unsigned int Line::getIndex() {
 	return index;
 }
 
+//increments the number of filled or empty times for a given CellInfo list based on a line
 vector<CellInfo> Line::addConstraints(vector<CellInfo> commonGround, Line line) {
 	for (unsigned int i = 0; i < line.size(); i++) {
 		if (line[i] == FILL) {
@@ -37,6 +38,7 @@ vector<CellInfo> Line::addConstraints(vector<CellInfo> commonGround, Line line) 
 	return commonGround;
 }
 
+//this sets some cells values based on a CellInfo list of common ground
 vector<LineDescriptor> Line::constrain(vector<CellInfo> commonGround, unsigned int threshold) {
 
 	vector<LineDescriptor> revisions = vector<LineDescriptor>();
@@ -48,11 +50,11 @@ vector<LineDescriptor> Line::constrain(vector<CellInfo> commonGround, unsigned i
 		return revisions;
 	}
 
-	 
-	//TODO: Make this show contradictions!  Can't set as FILL if already set as EMPTY
-
+	//for each cell in the line
 	for (unsigned int i = 0; i < data.size(); i++) {
 		bool revised = false;
+		//if it is unknown, and also the timesEmpty or timeFill meets the threshold, 
+		//  set it to EMPTY or FILL respectively
 		if (data[i] == UNKNOWN) {
 			if (commonGround[i].timesEmpty == threshold) {
 				data[i] = EMPTY;
@@ -63,10 +65,12 @@ vector<LineDescriptor> Line::constrain(vector<CellInfo> commonGround, unsigned i
 				revised = true;
 			}
 		}
+		//add the row or column that was modified
 		if (revised) {
 			revisions.push_back({ i, !rowWise });
 		}
 	}
+	//if there were modifications, add this line to the set of revised elements
 	if (revisions.size() > 0) revisions.push_back({ index, rowWise });
 	return revisions;
 }
