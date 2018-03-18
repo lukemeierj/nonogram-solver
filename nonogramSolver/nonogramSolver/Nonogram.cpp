@@ -337,6 +337,9 @@ void Nonogram::print() {
 }
 
 void Nonogram::printWithHints() {
+	if (hints.size() < 2) {
+		throw std::out_of_range("Cannot print with hints if there are none.");
+	}
 	int maxColHints = maxHintLength(hints[0]);
 	int maxRowHints = maxHintLength(hints[1]);
 

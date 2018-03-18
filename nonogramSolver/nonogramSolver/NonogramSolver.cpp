@@ -51,7 +51,7 @@ Nonogram NonogramSolver::getSolution() {
 	}
 	else {
 		//Backtrack search
-		return Nonogram();
+		return nonogram;
 	}
 
 }
