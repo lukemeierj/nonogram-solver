@@ -133,13 +133,13 @@ int main()
 	NonogramSolver det5x5_2Solver(det5x5_2);
 	assert(det5x5_2Solver.nearestSolution(true).isSolved());
 
-	test(100, 20, 25);
+	//test(1000, 20, 25);
 
 
-	for (int i = 5; i < 50; i++)
-	{
-		test(100, i, i);
-	}
+	//for (int i = 5; i < 50; i++)
+	//{
+	//	test(100, i, i);
+	//}
 
 	Nonogram bad("tooManyConstraints.txt");
 	NonogramSolver bestOfLuck(bad);

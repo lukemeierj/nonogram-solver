@@ -143,6 +143,9 @@ Nonogram::Nonogram(string filename) {
 	if ((index-1) > (width + height)) {
 		throw std::length_error("Too many constraints given the width/height");
 	}
+	else if (hints[0].size() != width || hints[1].size() != height){
+		throw std::length_error("Not the right number of constraints!");
+	}
 }
 
 //get a value, but throw an error if it is out of bounds
