@@ -23,7 +23,7 @@ void NonogramSolver::setNonogram(Nonogram nonogram) {
 }
 
 
-Nonogram NonogramSolver::getSolution() {
+Nonogram NonogramSolver::getSolution(bool debug) {
 	queue<LineDescriptor> searchQueue = queue<LineDescriptor>();
 
 	for (unsigned int i = 0; i < nonogram.getHeight(); i++) {
@@ -37,7 +37,8 @@ Nonogram NonogramSolver::getSolution() {
 		LineDescriptor element = searchQueue.front();
 		searchQueue.pop();
 		Line line = Line(nonogram.getLine(element.index, element.row), element.index, element.row);
-		vector<LineDescriptor> revisions = consolidate(line);
+		vector<LineDescriptor> revisions = consolidate(line, debug);
+		if(debug) nonogram.printWithHints();
 		if(revisions.size() > 0) {
 			nonogram.setLine(line.getVector(), line.getIndex(), line.getRowWise());
 			for (unsigned int i = 0; i < revisions.size(); i++) {
@@ -58,7 +59,7 @@ Nonogram NonogramSolver::getSolution() {
 
 
 
-vector<LineDescriptor> NonogramSolver::consolidate(Line &line) {
+vector<LineDescriptor> NonogramSolver::consolidate(Line &line, bool debug) {
 	vector<unsigned int> hints = nonogram.getHints(line.getIndex(), line.getRowWise());
 
 	vector<LineInfo> commonGround = vector<LineInfo>(line.size());

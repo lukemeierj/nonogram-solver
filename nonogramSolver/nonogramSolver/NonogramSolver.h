@@ -53,11 +53,11 @@ public:
 	NonogramSolver();
 	NonogramSolver(Nonogram nonogram);
 	~NonogramSolver();
-	Nonogram getSolution();
+	Nonogram getSolution(bool debug = false);
 	void setNonogram(Nonogram nonogram);
 private:
 	Nonogram nonogram;
-	vector<LineDescriptor> consolidate(Line &line);
+	vector<LineDescriptor> consolidate(Line &line, bool debug = false);
 	
 };
 
