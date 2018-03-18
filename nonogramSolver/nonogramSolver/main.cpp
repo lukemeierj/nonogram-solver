@@ -48,9 +48,11 @@ void test(int trials, int width, int height) {
 
 int main()
 {
+	 
+#pragma region Tests
 	//test that reading from a file works
 	//test that isSolved works
-	//test that saving a config works 
+	//test that saving a config works
 	Nonogram non("5x2.txt");
 	non.saveBoardConfig("5x2-out.txt");
 	non.set(0, 0, FILL);
@@ -65,7 +67,7 @@ int main()
 	non.set(4, 1, EMPTY);
 
 	assert(non.isSolved());
-	
+
 
 	Nonogram non2("5x2-out.txt");
 	non2.set(0, 0, FILL);
@@ -132,8 +134,8 @@ int main()
 	Nonogram det5x5_2("5x5-det2.txt");
 	NonogramSolver det5x5_2Solver(det5x5_2);
 	assert(det5x5_2Solver.nearestSolution(true).isSolved());
+#pragma endregion
 
-	test(1000, 20, 25);
 
 
 	// Code used for input growth tests
