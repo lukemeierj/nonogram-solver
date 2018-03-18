@@ -1,5 +1,10 @@
 #pragma once
 
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <stdlib.h>    
+#include <time.h>  
 #include <vector>
 #include <string>
 
@@ -42,8 +47,11 @@ public:
 	bool operator==(Nonogram& rhs)const;
 	bool operator!=(Nonogram& rhs)const;
 	Nonogram emptied();
+	void print();
+	void printWithHints();
 
 private:
+	int maxHintLength(vector<vector<unsigned int>>);
 	bool meetsConstraints(bool rowWise = true);
 	vector<vector<unsigned int>> generateHints(bool rowWise = true);
 	vector<vector<TileType>> getTranspose();

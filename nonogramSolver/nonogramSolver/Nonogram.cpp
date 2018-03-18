@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "Nonogram.h"
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <stdlib.h>    
-#include <time.h>  
+
 
 
 Nonogram::Nonogram()
@@ -314,4 +310,114 @@ Nonogram Nonogram::emptied() {
 		}
 	}
 	return newNonogram;
+}
+
+void Nonogram::print() {
+	for (int i = 0; i < board[0].size(); i++) {
+		for (int j = 0; j < board.size(); j++) {
+			std::cout << " ";
+			switch (board[j][i])
+			{
+			case FILL:
+				std::cout << "X";
+				break;
+			case EMPTY:
+				std::cout << "_";
+				break;
+			case UNKNOWN:
+				std::cout << "?";
+				break;
+			default:
+				break;
+			}
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+}
+
+void Nonogram::printWithHints() {
+	int maxColHints = maxHintLength(hints[0]);
+	int maxRowHints = maxHintLength(hints[1]);
+
+	// Print column hints
+	for (int i = 0; i < maxColHints; i++) {
+		// Prints the padding for column hints
+		for (int s = 0; s < maxRowHints + 1; s++) {
+			std::cout << "  ";
+		}
+
+		// For every column
+		for (int j = 0; j < hints[0].size(); j++) {
+			int h = i - (maxColHints - hints[0][j].size());
+
+			if (h >= 0) {
+				std::cout << " " << hints[0][j][h];
+			}
+			else {
+				std::cout << "  ";
+			}
+		}
+
+		std::cout << std::endl;
+	}
+
+	// Print horizontal separator
+	for (int s = 0; s < maxRowHints + 1; s++) {
+		std::cout << "  ";
+	}
+	// For every column
+	for (int j = 0; j < board[0].size(); j++) {
+		std::cout << "--";
+	}
+	std::cout << std::endl;
+
+	// Print row hints and board
+	for (int i = 0; i < board[0].size(); i++) {
+		// Print hints row
+		for (int j = 0; j < maxRowHints; j++) {
+			int h = j -(maxRowHints - hints[1][i].size());
+
+			if (h >= 0) {
+				std::cout << " " << hints[1][i][h];
+			}
+			else {
+				std::cout << "  ";
+			}
+		}
+
+		// Print vertical hints separator
+		std::cout << " |";
+
+		// Print board row
+		for (int j = 0; j < board.size(); j++) {
+			std::cout << " ";
+			switch (board[j][i])
+			{
+			case FILL:
+				std::cout << "X";
+				break;
+			case EMPTY:
+				std::cout << "_";
+				break;
+			case UNKNOWN:
+				std::cout << "?";
+				break;
+			default:
+				break;
+			}
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+}
+
+int Nonogram::maxHintLength(vector<vector<unsigned int>> hintList) {
+	int max = 0;
+	for (int i = 0; i < hintList.size(); i ++) {
+		if (max < hintList[i].size()) {
+			max = hintList[i].size();
+		}
+	}
+	return max;
 }
