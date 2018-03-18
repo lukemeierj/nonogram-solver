@@ -18,40 +18,40 @@ This program includes the interface and design of a Nonogram class and a Nonogra
 * Generate an copy of a nonogram with all the board unsolved with `myNon.emptied()`
 * Create a nonogram from a file config with `Nonogram("filename.txt")`
 	* To create a config file, follow this format:
-	
+
 	```
-	[width] [height] 
+	[width] [height]
 	[1st column constraint #1] [1st column, constraint #2]
 	[2nd column constraint #1] [2nd column, constraint #2] [2nd column, constraint #3]
 	.
 	.
 	.
-	[width column constraint #1] 
+	[width column constraint #1]
 	[1st row constraint #1] [1st row, constraint #2]
-	[2nd row constraint #1] 
+	[2nd row constraint #1]
 	.
 	.
 	.
-	[height column constraint #1] [height column constraint #2] 
+	[height column constraint #1] [height column constraint #2]
 	```
 	* For example
 	```
-	ex. 
+	ex.
 
 	5 2
-	2 
-	1 
-	1 
-	2 
-	2 
-	1 2 
-	5 
+	2
+	1
+	1
+	2
+	2
+	1 2
+	5
 	```
 
 ## Nonogram Solver
 
 * Create a new solver agent with `NonogramSolver(myNon)`
 * Attempt to solve the nonogram with `myNon.nearestSolution()`
-	* This does not necessarily return a solved board in the event it cannot be solved through just constraint satisfaction. 
+	* This does not necessarily return a solved board in the event it cannot be solved through just constraint satisfaction.
 	* To make sure a board is actually solved, `myNon.nearestSolution().isSolved()`
-
+* To print out iterations as the solver works use `myNon.nearestSolution(true)` 

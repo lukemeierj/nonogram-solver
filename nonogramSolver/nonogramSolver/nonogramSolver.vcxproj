@@ -161,11 +161,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="10x10_1.txt" />
     <Text Include="5x1.txt" />
     <Text Include="2x2-test.txt" />
     <Text Include="5x2-test.txt" />
-    <Text Include="5x2.txt" />
     <Text Include="5x5-det.txt" />
     <Text Include="5x5-det2.txt" />
     <Text Include="6x1.txt" />
