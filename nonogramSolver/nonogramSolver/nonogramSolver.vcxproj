@@ -150,8 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Line.cpp" />
-    <ClCompile Include="Nonogram.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Nonogram.cpp" />
     <ClCompile Include="NonogramSolver.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

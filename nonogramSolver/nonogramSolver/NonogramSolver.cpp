@@ -18,11 +18,6 @@ NonogramSolver::~NonogramSolver()
 {
 }
 
-void NonogramSolver::setNonogram(Nonogram nonogram) {
-	this->nonogram = nonogram;
-}
-
-
 Nonogram NonogramSolver::getSolution(bool debug) {
 	queue<LineDescriptor> searchQueue = queue<LineDescriptor>();
 
