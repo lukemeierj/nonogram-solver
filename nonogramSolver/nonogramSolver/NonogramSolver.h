@@ -77,7 +77,6 @@ public:
 	//get a solution for a nonogram.  if debug = true, print each step as we solve
 	Nonogram getSolution(bool debug = false);
 	//set the nonogram to something new.
-	void setNonogram(Nonogram nonogram);
 private:
 	Nonogram nonogram;
 	//this calculates permutations of possible lines and finds any common ground between all permutations
