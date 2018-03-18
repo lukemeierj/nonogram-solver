@@ -3,12 +3,13 @@
 #pragma once
 
 
-//Information on
+//Information on how often a cell is empty or filled when examining multiple permutations
 struct CellInfo {
 	unsigned int timesEmpty = 0;
 	unsigned int timesFilled = 0;
 };
 
+//This is a lightweight way to describe a line without actually storing its contents 
 struct LineDescriptor {
 	unsigned int index = 0;
 	bool row = true;
