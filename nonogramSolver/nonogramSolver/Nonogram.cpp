@@ -343,32 +343,34 @@ void Nonogram::printWithHints() {
 	// Print column hints
 	for (int i = 0; i < maxColHints; i++) {
 		// Prints the padding for column hints
-		for (int s = 0; s < maxRowHints + 1; s++) {
-			std::cout << "  ";
+		for (int s = 0; s < maxRowHints; s++) {
+			std::cout << setw(3) << " ";
 		}
+		std::cout << "  ";
 
 		// For every column
 		for (int j = 0; j < hints[0].size(); j++) {
 			int h = i - (maxColHints - hints[0][j].size());
 
 			if (h >= 0) {
-				std::cout << " " << hints[0][j][h];
+				cout << " " << setw(2) << hints[0][j][h];
 			}
 			else {
-				std::cout << "  ";
+				cout << setw(3) << " ";
 			}
 		}
 
-		std::cout << std::endl;
+		cout << std::endl;
 	}
 
 	// Print horizontal separator
-	for (int s = 0; s < maxRowHints + 1; s++) {
-		std::cout << "  ";
+	for (int s = 0; s < maxRowHints; s++) {
+		std::cout << setw(3) << " ";
 	}
+	std::cout << "  ";
 	// For every column
 	for (int j = 0; j < board[0].size(); j++) {
-		std::cout << "--";
+		cout << "--";
 	}
 	std::cout << std::endl;
 
@@ -379,10 +381,10 @@ void Nonogram::printWithHints() {
 			int h = j -(maxRowHints - hints[1][i].size());
 
 			if (h >= 0) {
-				std::cout << " " << hints[1][i][h];
+				std::cout << " " << setw(2) << hints[1][i][h];
 			}
 			else {
-				std::cout << "  ";
+				std::cout << setw(3) << " ";
 			}
 		}
 
@@ -395,13 +397,13 @@ void Nonogram::printWithHints() {
 			switch (board[j][i])
 			{
 			case FILL:
-				std::cout << "X";
+				std::cout << setw(2) << " X";
 				break;
 			case EMPTY:
-				std::cout << "_";
+				std::cout << setw(2) << " _";
 				break;
 			case UNKNOWN:
-				std::cout << "?";
+				std::cout << setw(2) << " ?";
 				break;
 			default:
 				break;
